@@ -6,15 +6,17 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 /* eslint-env node */
+/* eslint-disable @typescript-eslint/no-var-requires */
+const { configure } = require('quasar/wrappers')
 
-module.exports = function (/* ctx */) {
-  const execSync = require('child_process').execSync
-  const fs = require('fs')
-  const path = require('path')
-
+module.exports = configure(function (ctx) {
   return {
     // https://quasar.dev/quasar-cli/supporting-ts
-    supportTS: false,
+    supportTS: {
+      tsCheckerConfig: {
+        eslint: true
+      }
+    },
 
     // https://quasar.dev/quasar-cli/prefetch-feature
     // preFetch: true,
@@ -23,12 +25,13 @@ module.exports = function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
-
+      'composition-api',
+      'axios'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: [
-      'app.sass'
+      'app.scss'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -67,52 +70,29 @@ module.exports = function (/* ctx */) {
 
       // https://quasar.dev/quasar-cli/handling-webpack
       extendWebpack (cfg) {
-        cfg.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /node_modules/
-        })
-      },
-
-      afterBuild() {
-        console.log('설치 파일을 만드는 중 입니다.')
-
-        const projectDir = path.join(__dirname, '/dist/electron/Multistreaming-Assist-win32-x64')
-        const packageJSON = fs.readFileSync(path.join(__dirname, 'package.json'), 'UTF-8')
-        const version = JSON.parse(packageJSON).version
-
-        try {
-          fs.writeFileSync(path.join(projectDir, '/version'), version, { encoding: 'UTF-8', flag: 'w' })
-        } catch(e) {
-          console.log(e)
-          console.log('version을 기록하는데 실패했습니다.')
-          return false
+        // linting is slow in TS projects, we execute it only for production builds
+        if (ctx.prod) {
+          cfg.module.rules.push({
+            enforce: 'pre',
+            test: /\.(js|vue)$/,
+            loader: 'eslint-loader',
+            exclude: /node_modules/
+          })
         }
-
-        return new Promise((resolve, reject) => {
-          try {
-            execSync('makensis "C:\\git\\javascript\\Multistreaming-Assist\\install.nsi"')
-            console.log('설치 파일 생성이 완료 되었습니다.')
-          } catch(e) {
-            console.log(e)
-            console.log('설치 파일 생성에 실패했습니다.')
-          }
-        })
       }
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
       https: false,
-      port: 3000,
+      port: 8080,
       open: true // opens browser window automatically
     },
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
       iconSet: 'material-icons', // Quasar icon set
-      lang: 'ko-kr', // Quasar language pack
+      lang: 'en-us', // Quasar language pack
       config: {},
 
       // Possible values for "importStrategy":
@@ -128,7 +108,7 @@ module.exports = function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Dialog', 'Notify', 'QToggle']
+      plugins: []
     },
 
     // animations: 'all', // --- includes all animations
@@ -146,7 +126,7 @@ module.exports = function (/* ctx */) {
       workboxOptions: {}, // only for GenerateSW
       manifest: {
         name: 'Multistreaming-Assist',
-        short_name: 'MA',
+        short_name: 'Multistreaming-Assist',
         description: 'This is multistreaming assist tool',
         display: 'standalone',
         orientation: 'portrait',
@@ -213,32 +193,6 @@ module.exports = function (/* ctx */) {
         // https://www.electron.build/configuration/configuration
 
         appId: 'multistreaming-assist'
-        // artifactName: 'Multistreaming-Assist.exe',
-
-        // // NSIS Packaging
-        // win: {
-        //   target: [{
-        //     target: 'nsis',
-        //     arch: [
-        //       'x64'
-        //     ]
-        //   }],
-        //   icon: 'public/favicon.ico'
-        // },
-        // nsis: {
-        //   warningsAsErrors: false,
-        //   oneClick: false,
-        //   perMachine: true,
-        //   allowToChangeInstallationDirectory: true,
-        //   language: '1042',
-        //   include: 'nsisconf.nsh',
-        //   script: 'install.nsi',
-        //   shortcutName: 'Multistreaming-Assist'
-        // },
-        // directories: {
-        //   buildResources: 'dist/electron/Packaged/win-unpacked',
-        //   output: 'build'
-        // }
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
@@ -250,4 +204,4 @@ module.exports = function (/* ctx */) {
       }
     }
   }
-}
+})
