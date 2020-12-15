@@ -1,7 +1,7 @@
 import { store } from 'quasar/wrappers'
 import Vuex from 'vuex'
 
-// store의 모듈들을 여기서 import 한다
+// store의 모듈과 인터페이스를 여기서 import 한다.
 import dir from './dir'
 import { DirStateInterface } from './dir/state'
 
@@ -17,6 +17,7 @@ import { OptionStateInterface } from './option/state'
 import toggleSwitch from './toggleSwitch'
 import { ToggleSwitchStateInterface } from './toggleSwitch/state'
 
+// 추가적인 store가 추가된다면 아래와 같이 추가할것.
 // import example from './module-example';
 // import { ExampleStateInterface } from './module-example/state';
 
