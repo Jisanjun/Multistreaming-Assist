@@ -3,11 +3,17 @@ import { StateInterface } from '../index';
 import { DirStateInterface } from './state';
 
 const actions: ActionTree<DirStateInterface, StateInterface> = {
-  dir (state: ActionContext<DirStateInterface, StateInterface>, dir: string) {
-    state.commit('dir', dir);
-  },
+  rootDir (state: ActionContext<DirStateInterface, StateInterface>, dir: string) {
+    let rootDir = ''
 
-  rootDir (state: ActionContext<DirStateInterface, StateInterface>, rootDir: string) {
+    // 현재 ./dir의 위치에 따라 끝에 경로가 추가로 붙으므로 지워줘야 함
+    // process.env.DEV는 quasar dev로 실행 했을 때 true가 된다
+    if(process.env.DEV) {
+        rootDir = dir.replace('src\\store\\dir', '')
+    } else {
+        rootDir = dir.replace('resources\\app.asar', '')
+    }
+
     state.commit('rootDir', rootDir);
   },
 
@@ -15,8 +21,8 @@ const actions: ActionTree<DirStateInterface, StateInterface> = {
     state.commit('nginxDir', nginxDir);
   },
 
-  nginxCofDir (state: ActionContext<DirStateInterface, StateInterface>, nginxCofDir: string) {
-    state.commit('nginxCofDir', nginxCofDir);
+  nginxConfDir (state: ActionContext<DirStateInterface, StateInterface>, nginxCofDir: string) {
+    state.commit('nginxConfDir', nginxCofDir);
   },
 
   nginxLogsDir (state: ActionContext<DirStateInterface, StateInterface>, nginxLogsDir: string) {
