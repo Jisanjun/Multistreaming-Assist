@@ -33,7 +33,7 @@
   </q-page>
 </template>
 
-<script>
+<script lang="ts">
 import app from 'electron'
 
 // vuex
@@ -64,7 +64,7 @@ export default {
   },
 
   mounted() {
-    this.originalRecordDir = this.getRecordingDir
+    this.originalRecordDir = this.recordingDir
   },
 
   data() {
@@ -92,7 +92,7 @@ export default {
       })
     },
 
-    changeRecordingDir(value) {
+    changeRecordingDir(value: string) {
       if(value.length === 0 && this.originalRecordDir !== '') {
         this.recordingDir = this.originalRecordDir
       } else {

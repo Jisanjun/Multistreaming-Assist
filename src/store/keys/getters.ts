@@ -12,11 +12,30 @@ const getters: GetterTree<KeyStateInterface, StateInterface> = {
   },
 
   additionalRTMPUrl (state: KeyStateInterface): string {
-    return state.additionalRTMPUrl
+    return state.additionalRTMPUrl;
   },
 
   additionalRTMPKey (state: KeyStateInterface): string {
-    return state.additionalRTMPKey
+    return state.additionalRTMPKey;
+  },
+
+  fullTwitchUrl(state: KeyStateInterface): string {
+    let fullTwitchUrl = state.twitchKey.trim() ? 'push rtmp://live-sel.twitch.tv/app/' + state.twitchKey.trim() + ';' : ''
+    return fullTwitchUrl;
+  },
+
+  fullYoutubeUrl(state: KeyStateInterface): string {
+      let fullYoutubeUrl = state.youtubeKey.trim() ? 'push rtmp://a.rtmp.youtube.com/live2/' + state.youtubeKey.trim() + ';' : ''
+      return fullYoutubeUrl;
+  },
+
+  fullAdditionalUrl(state: KeyStateInterface): string {
+      let fullAdditionalRTMPUrl = 'push ' + state.additionalRTMPUrl.trim() + '/' + state.additionalRTMPKey.trim() + ';'
+      if(fullAdditionalRTMPUrl === 'push /;') {
+          fullAdditionalRTMPUrl = ''
+      }
+
+      return fullAdditionalRTMPUrl;
   }
 };
 

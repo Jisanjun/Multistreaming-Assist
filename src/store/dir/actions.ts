@@ -1,3 +1,5 @@
+import path from 'path'
+
 import { ActionTree, ActionContext } from 'vuex';
 import { StateInterface } from '../index';
 import { DirStateInterface } from './state';
@@ -17,15 +19,18 @@ const actions: ActionTree<DirStateInterface, StateInterface> = {
     state.commit('rootDir', rootDir);
   },
 
-  nginxDir (state: ActionContext<DirStateInterface, StateInterface>, nginxDir: string) {
+  nginxDir (state: ActionContext<DirStateInterface, StateInterface>, dir: string) {
+    const nginxDir = path.join(dir, 'nginx')
     state.commit('nginxDir', nginxDir);
   },
 
-  nginxConfDir (state: ActionContext<DirStateInterface, StateInterface>, nginxCofDir: string) {
-    state.commit('nginxConfDir', nginxCofDir);
+  nginxConfDir (state: ActionContext<DirStateInterface, StateInterface>, dir: string) {
+    const nginxConfDir = path.join(dir, 'conf')
+    state.commit('nginxConfDir', nginxConfDir);
   },
 
-  nginxLogsDir (state: ActionContext<DirStateInterface, StateInterface>, nginxLogsDir: string) {
+  nginxLogsDir (state: ActionContext<DirStateInterface, StateInterface>, dir: string) {
+    const nginxLogsDir = path.join(dir, 'logs')
     state.commit('nginxLogsDir', nginxLogsDir);
   },
 
